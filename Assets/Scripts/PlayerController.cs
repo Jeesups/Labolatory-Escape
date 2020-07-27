@@ -6,8 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] Rigidbody rigidbody;
 
-    float movementSpeed = 200f;
-    float jumpForce = 500f;
+    float movementSpeed = 1000f;
+    float jumpForce = 550f;
 
 
     enum PlayerMovementState{
@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
         rigidbody = GetComponent<Rigidbody>();
        
     }
-    void FixedUpdate()
+    void Update()
     {
 
         CheckInput();
@@ -36,10 +36,10 @@ public class PlayerController : MonoBehaviour
     void Move()
     {
         if(Input.GetKey(KeyCode.A)){
-            rigidbody.AddForce(new Vector3(movementSpeed * Time.deltaTime,0f,0f));
+            rigidbody.AddForce(new Vector3(-movementSpeed * Time.deltaTime,0f,0f));
         }
         if(Input.GetKey(KeyCode.D)){
-            rigidbody.AddForce(new Vector3(-movementSpeed* Time.deltaTime,0f,0f));
+            rigidbody.AddForce(new Vector3(movementSpeed * Time.deltaTime,0f,0f));
         }
 
 
