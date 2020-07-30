@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
         MidAir
         
     }
+    bool isPlayerInAir = false; // alternative to enum, since upper enum owns only two states and it could be replaced by boolean
 
     [SerializeField] PlayerMovementState playerMovementState = PlayerMovementState.Landed;
    void Start()
