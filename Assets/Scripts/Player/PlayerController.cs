@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] Rigidbody rigidbody;
 
+
+    [SerializeField] AudioController audioController;
     float movementSpeed = 1000f;
     float jumpForce = 550f;
 
@@ -21,7 +23,7 @@ public class PlayerController : MonoBehaviour
    void Start()
     {     
         rigidbody = GetComponent<Rigidbody>();
-       
+        audioController = GetComponent<AudioController>();
     }
     void Update()
     {
@@ -48,7 +50,7 @@ public class PlayerController : MonoBehaviour
     void Jump()
     {
           if(Input.GetKey(KeyCode.Space) && playerMovementState == PlayerMovementState.Landed){
-
+            audioController.SoundOnJump();
             rigidbody.AddForce(new Vector3(0f,jumpForce,0f));
             playerMovementState = PlayerMovementState.MidAir;
         }
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision other) {
         if(other.transform.tag.Equals("Friendly")){
             playerMovementState = PlayerMovementState.Landed;
+            audioController.SoundOnLand();
         }    
     }
 }
