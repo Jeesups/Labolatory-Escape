@@ -6,20 +6,19 @@ using UnityEngine.SceneManagement;
 
 public class LevelChanger : MonoBehaviour
 {
+    //Main objective: Change level according to specific event
+    //TODO: make delegate and event handler.
     // Start is called before the first frame update
+
+    EventHandler eventHandler;
+
     Scene scene;
     
     void Start()
     {
         scene = SceneManager.GetActiveScene();
+        eventHandler = GetComponent<EventHandler>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
 
     void LoadNextScene(){
         if(scene.buildIndex <= SceneManager.sceneCountInBuildSettings - 1){

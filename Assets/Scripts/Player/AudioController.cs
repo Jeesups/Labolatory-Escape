@@ -13,7 +13,8 @@ public class AudioController : MonoBehaviour
     {
         audioSource = GetComponent<AudioSource>();
     }
-
+    //TODO: Fix few bugs
+    //BUGLIST: After hitting moving platform it should also play
     public void SoundOnJump(){
         audioSource.Stop();
         audioSource.PlayOneShot(jumpSound);
