@@ -5,17 +5,29 @@ using UnityEngine;
 public class EventHandler : MonoBehaviour
 {
 
-    //CATCHES EVENTS FROM OTHER CLASSES AND ALLOWS TO USE RETRIEVED VALUES IN GAME_MANAGER SCRIPTS
-    // Start is called before the first frame update
-    [SerializeField] GameObject playerObject;
-    void Start()
-    {
-        
+    [SerializeField] private PlayerController playerObject;
+    private LevelChanger levelChanger;
+
+    //Making this class as Singleton
+    public static EventHandler current;
+    private void Awake() {
+        current = this;
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void Start()
     {
-        
+        levelChanger = GetComponent<LevelChanger>();
+        playerObject = playerObject.gameObject.GetComponent<PlayerController>();
+    }
+
+    private void Update()
+    {
+        playerObject.OnChangeLevel += PlayerObject_OnChangeLevel;
+    }
+
+    private void PlayerObject_OnChangeLevel()
+    {
+        //levelChanger.LoadNextScene();
     }
 }

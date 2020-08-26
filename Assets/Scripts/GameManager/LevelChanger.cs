@@ -7,29 +7,72 @@ using UnityEngine.SceneManagement;
 public class LevelChanger : MonoBehaviour
 {
     //Main objective: Change level according to specific event
-    //TODO: make delegate and event handler.
+
+    //It works but it would require refactoring since it works only when player hits finish point, but what will happend if player will die?
     // Start is called before the first frame update
 
-    EventHandler eventHandler;
+    [SerializeField] private PlayerController playerController;
+
+    [SerializeField] private KillBoxController killBoxController;
 
     Scene scene;
-    
+    int currentSceneIndex;
+    int newSceneIndex;
+    private bool isChangingLevel;
     void Start()
     {
         scene = SceneManager.GetActiveScene();
-        eventHandler = GetComponent<EventHandler>();
+        currentSceneIndex = scene.buildIndex;
+        playerController = playerController.GetComponent<PlayerController>();
+        killBoxController = killBoxController.GetComponent<KillBoxController>();
+        
+        isChangingLevel = false;
+        newSceneIndex = currentSceneIndex;
     }
 
-    void LoadNextScene(){
-        if(scene.buildIndex <= SceneManager.sceneCountInBuildSettings - 1){
-            SceneManager.LoadScene(scene.buildIndex+1);
+    private void Update()
+    {      
+        playerController.OnChangeLevel += PlayerController_OnChangeLevel;
+        killBoxController.OnPlayerDetected += KillBoxController_OnPlayerDetected;
+
+        if (isChangingLevel)
+        {
+            LoadNextScene(newSceneIndex);
+            isChangingLevel = false;
         }
-        else if(scene.buildIndex == SceneManager.sceneCountInBuildSettings - 1){
-            RestartGame();
-        }
+        
+        
+        
     }
-    void RestartGame()
+
+    private void KillBoxController_OnPlayerDetected()
+    {
+        newSceneIndex = 0;
+        isChangingLevel = true;
+    }
+
+    private void PlayerController_OnChangeLevel()
+    {
+        newSceneIndex = currentSceneIndex + 1;
+        isChangingLevel = true;
+    }
+
+    public void LoadNextScene(int targetScene){
+        if(targetScene >= SceneManager.sceneCountInBuildSettings)
+        {
+            RestartGame();
+            return;
+        }
+
+        SceneManager.LoadScene(targetScene);
+    }
+    private void RestartGame()
     {
         SceneManager.LoadScene(0);
+    }
+
+
+    private void KillPlayer(){
+        RestartGame();
     }
 }
