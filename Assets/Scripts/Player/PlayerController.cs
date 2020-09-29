@@ -6,6 +6,7 @@ using System;
 public class PlayerController : MonoBehaviour
 
 {
+    //Change Level event
     public delegate void OnChangeLevelEvent();
 
     public event OnChangeLevelEvent OnChangeLevel;
@@ -26,7 +27,7 @@ public class PlayerController : MonoBehaviour
         MidAir
     }
 
-    bool isPlayerInAir = false; // alternative to enum, since upper enum owns only two states and it could be replaced by boolean
+    //bool isPlayerInAir = false; // alternative to enum, since upper enum owns only two states and it could be replaced by boolean
 
     private PlayerMovementState playerMovementState = PlayerMovementState.Landed;
     [SerializeField] private PlayerExistingState playerExistingState = PlayerExistingState.Alive;
@@ -34,8 +35,6 @@ public class PlayerController : MonoBehaviour
     {     
         rigidbody = GetComponent<Rigidbody>();
         audioController = GetComponent<AudioController>();
-
-        //Shoot events
         
     }
     void Update()
@@ -75,11 +74,17 @@ public class PlayerController : MonoBehaviour
     public PlayerExistingState GetCurrentExistingState(){
         return playerExistingState;
     }
+    private void Landed()
+    {
+        playerMovementState = PlayerMovementState.Landed;
+        audioController.SoundOnLand();
+    }
 
     private void OnCollisionEnter(Collision other) {
-        if(other.transform.tag.Equals("Friendly")){
-            playerMovementState = PlayerMovementState.Landed;
-            audioController.SoundOnLand();
+    
+        if (other.transform.tag.Equals("MovingPlatform") || other.transform.tag.Equals("Ground") || other.transform.tag.Equals("Friendly"))
+        {
+            Landed();
         }
         if(other.transform.tag.Equals("Pit")){
             playerExistingState = PlayerExistingState.Dying;
@@ -88,5 +93,7 @@ public class PlayerController : MonoBehaviour
         {
             OnChangeLevel?.Invoke();
         }
+
     }
+
 }
